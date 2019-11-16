@@ -1,0 +1,17 @@
+.gameObject.grass1 {
+  background-position-x: 0px;
+  background-position-y: -480px;
+}
+
+.gameObject.grass2 {
+  background-position-x: -1728px;
+  background-position-y: -1056px;
+}
+
+.gameObject {
+  width: 32px;
+  height: 32px;
+  background-image: url("assets/sprites.png");
+}
+
+/*# sourceMappingURL=index.css.map */

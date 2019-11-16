@@ -1,0 +1,29 @@
+.DS_Store
+node_modules
+vue/dist
+vue/node_modules
+vue/public/img/*/AI
+vue/public/img/*/EPS
+vue/public/img/*/PNG
+vue/public/img/*/TXT
+vue/public/img/*/UnityPackage
+vue/public/img/*/*.xcf
+
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

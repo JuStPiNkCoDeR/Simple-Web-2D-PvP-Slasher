@@ -1,0 +1,7 @@
+$offset: -32px;
+$spriteURL: "assets/sprites.png";
+
+@mixin getSprite($x, $y) {
+  background-position-x: $x * $offset;
+  background-position-y: $y * $offset;
+};

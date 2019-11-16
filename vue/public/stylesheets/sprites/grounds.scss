@@ -1,0 +1,9 @@
+@import "common";
+
+.gameObject.grass1 {
+  @include getSprite(0, 15);
+}
+
+.gameObject.grass2 {
+  @include getSprite(54, 33);
+}
