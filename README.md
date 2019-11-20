@@ -12,6 +12,7 @@ Technology stack:
 <ul>
     <li>Vue(Vuex)</li>
     <li>Socket.io</li>
+    <li>Jest(vue-jest)</li>
     <li>JavaScript(Front-end with Babel & Webpack)</li>
     <li>TypeScript(on Front-end only)</li>
     <li>SCSS</li>
