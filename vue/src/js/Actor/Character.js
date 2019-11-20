@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -12,11 +11,11 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-var Vector_1 = require("../Graphics/Vector");
-var States_1 = require("./States");
-var GameObject_1 = require("./GameObject");
-var SocketManager_1 = require("../SocketManager");
+import Vector from '../Graphics/Vector';
+import States from './States';
+import GameObject from './GameObject';
+import Box from "../Collisions/Box";
+//import SocketManager from '../SocketManager';
 function move(key) {
     switch (key) {
         case "w":
@@ -50,58 +49,73 @@ var Character = /** @class */ (function (_super) {
     __extends(Character, _super);
     function Character(pos, props) {
         var _this = _super.call(this, {
-            size: new Vector_1.default(128, 128),
-            position: pos
+            name: props.name,
+            size: new Vector(128, 128),
+            position: pos,
+            collide: new Box({
+                offset: new Vector(0, 64),
+                size: new Vector(128, 64)
+            })
         }) || this;
         _this.opponentID = null;
         _this._pressed = [];
+        _this._speedConst = 1;
         _this.movement = move.bind(_this);
         _this._accessToController = props.accessToController;
         init(props);
         return _this;
     }
     Character.prototype.goUp = function () {
-        this._position.y -= 5;
-        this._sprite.state = States_1.default.Walking;
-        if (this.opponentID)
-            SocketManager_1.default.$emit('hero:game:event', {
+        var newPosition = new Vector(this._position.x, this._position.y - 5);
+        if (!this._collision.checkCollisions(newPosition)) {
+            this._position.y -= 5 * this._speedConst;
+            this._sprite.state = States.Walking;
+            /*if (this.opponentID) SocketManager.$emit('hero:game:event', {
                 id: this.opponentID,
                 event: 'up'
-            });
+            });*/
+        }
     };
     Character.prototype.goDown = function () {
-        this._position.y += 5;
-        this._sprite.state = States_1.default.Walking;
-        if (this.opponentID) {
-            SocketManager_1.default.$emit('hero:game:event', {
-                id: this.opponentID,
-                event: 'down'
-            });
+        var newPosition = new Vector(this._position.x, this._position.y + 5);
+        if (!this._collision.checkCollisions(newPosition)) {
+            this._position.y += 5 * this._speedConst;
+            this._sprite.state = States.Walking;
+            /*if (this.opponentID) {
+                SocketManager.$emit('hero:game:event', {
+                    id: this.opponentID,
+                    event: 'down'
+                });
+            }*/
         }
     };
     Character.prototype.goRight = function () {
-        this._position.x += 5;
-        this._sprite.state = States_1.default.Walking;
-        this._sprite.mirror(false);
-        if (this.opponentID)
-            SocketManager_1.default.$emit('hero:game:event', {
-                id: this.opponentID,
-                event: 'right'
-            });
+        var newPosition = new Vector(this._position.x + 5, this._position.y);
+        if (!this._collision.checkCollisions(newPosition)) {
+            this._position.x += 5 * this._speedConst;
+            this._sprite.state = States.Walking;
+            this._sprite.mirror(false);
+            /* if (this.opponentID) SocketManager.$emit('hero:game:event', {
+                 id: this.opponentID,
+                 event: 'right'
+             });*/
+        }
     };
     Character.prototype.goLeft = function () {
-        this._position.x -= 5;
-        this._sprite.state = States_1.default.Walking;
-        this._sprite.mirror(true);
-        if (this.opponentID)
-            SocketManager_1.default.$emit('hero:game:event', {
-                id: this.opponentID,
-                event: 'left'
-            });
+        var newPosition = new Vector(this._position.x - 5, this._position.y);
+        if (!this._collision.checkCollisions(newPosition)) {
+            this._position.x -= 5 * this._speedConst;
+            this._sprite.state = States.Walking;
+            this._sprite.mirror(true);
+            /* if (this.opponentID) SocketManager.$emit('hero:game:event', {
+                 id: this.opponentID,
+                 event: 'left'
+             });*/
+        }
     };
     Character.prototype.update = function () {
         var _this = this;
-        this._sprite.state = States_1.default.Idle;
+        this._sprite.state = States.Idle;
         if (this._accessToController) {
             pressed.forEach(function (val) {
                 _this.movement(val);
@@ -122,5 +136,6 @@ var Character = /** @class */ (function (_super) {
         configurable: true
     });
     return Character;
-}(GameObject_1.default));
-exports.default = Character;
+}(GameObject));
+export default Character;
+//# sourceMappingURL=Character.js.map

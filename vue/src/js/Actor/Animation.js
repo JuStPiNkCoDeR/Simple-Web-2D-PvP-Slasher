@@ -1,10 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var ResourceLoader_1 = require("../ResourceLoader");
-var Directions_1 = require("./Directions");
+import ResourcesLoader from '../ResourceLoader';
+import Directions from './Directions';
 var Animation = /** @class */ (function () {
     function Animation(url, framesAmount, duration, sizeX, sizeY, direction) {
-        if (direction === void 0) { direction = Directions_1.default.Horizontal; }
+        if (direction === void 0) { direction = Directions.Horizontal; }
         var _ = this;
         this._ready = false;
         this._url = url;
@@ -16,7 +14,7 @@ var Animation = /** @class */ (function () {
         this._durationPerFrame = duration / framesAmount;
         this._index = 0;
         this._time = 0;
-        ResourceLoader_1.default.load('image', [url])
+        ResourcesLoader.load('image', [url])
             .then(function (result) {
             _._sheet = result[url];
             _._ready = true;
@@ -29,8 +27,10 @@ var Animation = /** @class */ (function () {
         if (this._time > this._duration)
             this._time -= this._duration;
         var index = Math.floor(this._time / this._durationPerFrame);
-        var sx = (this._direction === Directions_1.default.Horizontal) ? index * this._x : 0;
-        var sy = (this._direction === Directions_1.default.Vectival) ? index * this._y : 0;
+        if (index > this._framesAmount - 1)
+            index = 0;
+        var sx = (this._direction === Directions.Horizontal) ? index * this._x : 0;
+        var sy = (this._direction === Directions.Vectival) ? index * this._y : 0;
         return {
             sheet: this._sheet,
             sx: sx,
@@ -41,4 +41,5 @@ var Animation = /** @class */ (function () {
     };
     return Animation;
 }());
-exports.default = Animation;
+export default Animation;
+//# sourceMappingURL=Animation.js.map

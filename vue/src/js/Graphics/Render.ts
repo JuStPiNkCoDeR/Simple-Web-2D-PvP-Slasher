@@ -151,10 +151,10 @@ export default {
             let i = lo, j = hi + 1;
 
             while(i < j) {
-                while(array[++i].position.y < array[lo].position.y){
+                while(array[++i].position.y + array[i].size.y < array[lo].position.y + array[lo].size.y){
                     if ( i == hi ) break;
                 }
-                while (array[--j].position.y > array[lo].position.y){
+                while (array[--j].position.y + array[j].size.y > array[lo].position.y + array[lo].size.y){
                     if ( j == lo ) break;
                 }
                 if (i >= j) break;

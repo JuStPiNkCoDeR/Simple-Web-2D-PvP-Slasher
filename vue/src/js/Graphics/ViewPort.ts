@@ -4,25 +4,28 @@ import Zone from "./Zone";
 import GameObject from "../Actor/GameObject";
 
 export default class ViewPort {
-    private _worldPoisition: Vector;
+    private _worldPosition: Vector;
     private _size: Vector;
     private _ctx: CanvasRenderingContext2D;
+    private _zones: Array<Zone>;
+    private _gameObjects;
 
     constructor(ctx: CanvasRenderingContext2D, pos: Vector, size: Vector) {
         this._ctx = ctx;
-        this._worldPoisition = pos;
+        this._worldPosition = pos;
         this._size = size;
     }
 
-    public update(characterPosition: Vector): void {
-        let newX = characterPosition.x - this._size.x / 2;
-        let newY = characterPosition.y - this._size.y / 2;
+    public update(): void {
+        this._gameObjects.hero[0].update();
+        let newX = this._gameObjects.hero[0].position.x - this._size.x / 2;
+        let newY = this._gameObjects.hero[0].position.y - this._size.y / 2;
 
-        this._worldPoisition.x = newX;
-        this._worldPoisition.y = newY;
+        this._worldPosition.x = newX;
+        this._worldPosition.y = newY;
     }
 
-    public drawZones(zones: Array<Zone>): void {
+    public drawZones(zones: Array<Zone> = this._zones): void {
         this._ctx.save();
         this._ctx.fillStyle = "black";
         this._ctx.fillRect(0, 0, this._size.x, this._size.y);
@@ -44,14 +47,21 @@ export default class ViewPort {
         });
     }
 
-    public drawGameObjects(gameObjects: Array<GameObject>, time: number) {
-        gameObjects.forEach((gameObject) => {
+    public drawGameObjects(time: number, gameObjects = this._gameObjects) {
+        let gameObjectsAsArray = Object.values(this._gameObjects) as Array<GameObject>;
+        //@ts-ignore
+        let gameObj = gameObjectsAsArray.flat();
+
+        let gameObjectsAsSortedArray = Render.sortByIncreasingY(gameObj);
+
+        
+        gameObjectsAsSortedArray.forEach((gameObject) => {
             let frame = gameObject.getFrame(time);
 
             if (!frame) return;
 
-            let cx = gameObject.position.x - this._worldPoisition.x - gameObject.size.x / 2;
-            let cy = gameObject.position.y - this._worldPoisition.y - gameObject.size.y / 2;
+            let cx = gameObject.position.x - this._worldPosition.x - gameObject.size.x / 2;
+            let cy = gameObject.position.y - this._worldPosition.y - gameObject.size.y / 2;
 
             this._ctx.save();
             if (frame.reversed) {
@@ -63,12 +73,26 @@ export default class ViewPort {
         })
     }
 
+    private resize(size: Vector): void {
+        let gameObjectsAsArray = Object.values(this._gameObjects) as Array<GameObject>;
+        //@ts-ignore
+        let gameObj = gameObjectsAsArray.flat();
+        let diffConst = new Vector(size.x / this._size.x,size.y / this._size.y);
+
+        this._zones.forEach((zone) => {
+            zone.onResize(diffConst);
+        });
+        gameObj.forEach((obj) => {
+           obj.onResize(diffConst);
+        });
+    }
+
     get endPoints(): [Vector, Vector, Vector, Vector] {
         return [
-            new Vector(this._worldPoisition.x + this.size.x, this._worldPoisition.y),
-            new Vector(this._worldPoisition.x, this._worldPoisition.y),
-            new Vector(this._worldPoisition.x, this._worldPoisition.y + this.size.y),
-            new Vector(this._worldPoisition.x + this.size.x, this._worldPoisition.y + this.size.y)
+            new Vector(this._worldPosition.x + this.size.x, this._worldPosition.y),
+            new Vector(this._worldPosition.x, this._worldPosition.y),
+            new Vector(this._worldPosition.x, this._worldPosition.y + this.size.y),
+            new Vector(this._worldPosition.x + this.size.x, this._worldPosition.y + this.size.y)
         ];
     }
 
@@ -77,6 +101,15 @@ export default class ViewPort {
     }
 
     set size(value: Vector) {
+        this.resize(value);
         this._size = value;
+    }
+
+    set zones(values: Array<Zone>) {
+        this._zones = values;
+    }
+
+    set gameObjects(values) {
+        this._gameObjects = values;
     }
 }

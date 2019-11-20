@@ -1,6 +1,6 @@
 enum States {
-    Idle,
-    Walking
+    Idle = "Idle",
+    Walking = "Walking"
 }
 
 export default States;

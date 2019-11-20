@@ -1,3 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = {};
+var Movement = /** @class */ (function () {
+    function Movement() {
+    }
+    return Movement;
+}());
+export default Movement;
+//# sourceMappingURL=Movement.js.map

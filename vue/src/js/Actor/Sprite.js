@@ -1,10 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var States_1 = require("./States");
+import States from './States';
 var Sprite = /** @class */ (function () {
     function Sprite() {
         this.animations = {};
-        this.state = States_1.default.Idle;
+        this.state = States.Idle;
         this._reversed = false;
     }
     Sprite.prototype.addAnimation = function (name, animation) {
@@ -31,4 +29,5 @@ var Sprite = /** @class */ (function () {
     });
     return Sprite;
 }());
-exports.default = Sprite;
+export default Sprite;
+//# sourceMappingURL=Sprite.js.map

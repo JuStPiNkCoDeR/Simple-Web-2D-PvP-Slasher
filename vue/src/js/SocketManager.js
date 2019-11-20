@@ -2,7 +2,7 @@ let host = location.host;
 let uri = 'http://' + host;
 //uri = "http://localhost:3000";
 
-let SocketManager = {
+/*let SocketManager = {
     id: undefined,
     socket: require('socket.io-client')(uri),
     $on: function (name, callback) {
@@ -20,4 +20,4 @@ let SocketManager = {
     })
 })();
 
-export default SocketManager;
+export default SocketManager;*/

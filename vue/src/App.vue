@@ -6,7 +6,9 @@
 
 <script>
 import GameField from './components/field/GameField';
-import SocketManager from './js/SocketManager';
+import MutationsType from './store/MutationsType';
+
+//import SocketManager from './js/SocketManager';
 
 export default {
   name: 'app',
@@ -19,10 +21,24 @@ export default {
     GameField
   },
   mounted() {
+    window.addEventListener('resize', () => {
+      this.$store.commit(MutationsType.viewPortChange, {
+        x: document.documentElement.clientWidth,
+        y: document.documentElement.clientHeight
+      });
+
+      this.$refs.gameField.clientSizeChanged();
+    });
     let opponentID = null;
     let isQuest = null;
 
-    SocketManager.$on('enemy:search', (data) => {
+    this.$refs.gameField.loadMenu();
+    /*this.$refs.gameField.init({
+      opponentID: opponentID,
+      isQuest: isQuest
+    });*/
+
+    /*SocketManager.$on('enemy:search', (data) => {
       if (SocketManager.id !== data) {
         SocketManager.$emit('enemy:requestForFight', {
           opponentID: data,
@@ -45,7 +61,7 @@ export default {
           isQuest: isQuest
         })
       }
-    })
+    })*/
   }
 }
 </script>

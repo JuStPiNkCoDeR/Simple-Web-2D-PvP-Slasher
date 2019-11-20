@@ -1,6 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var Vector_1 = require("./Vector");
+import Vector from './Vector';
 var Direction;
 (function (Direction) {
     Direction["BottomToTop"] = "bt";
@@ -11,7 +9,7 @@ var Direction;
 function getVector(i, f) {
     var x = f.x - i.x;
     var y = f.y - i.y;
-    return new Vector_1.default(x, y);
+    return new Vector(x, y);
 }
 function isVectorAtZone(zone, vector) {
     return (vector.x >= 0 && vector.y >= 0) &&
@@ -65,12 +63,12 @@ function calculateRectOffsetY(viewPortSizeY, rectSizeY, direction) {
     return offset;
 }
 function calculateRectOffsets(viewPortSize, rectSize, direction) {
-    return new Vector_1.default(calculateRectOffsetX(viewPortSize.x, rectSize.x, direction[0]), calculateRectOffsetY(viewPortSize.y, rectSize.y, direction[1]));
+    return new Vector(calculateRectOffsetX(viewPortSize.x, rectSize.x, direction[0]), calculateRectOffsetY(viewPortSize.y, rectSize.y, direction[1]));
 }
 function calculateRectSize(vector, zone, direction) {
-    return new Vector_1.default(calculateRectWidth(vector, zone, direction[0]), calculateRectHeight(vector, zone, direction[1]));
+    return new Vector(calculateRectWidth(vector, zone, direction[0]), calculateRectHeight(vector, zone, direction[1]));
 }
-exports.default = {
+export default {
     getZonePartData: function (viewPort, zone) {
         var zonePosition = zone.position, zoneSize = zone.size, viewPortPoints = viewPort.endPoints;
         var vector = null;
@@ -116,11 +114,11 @@ exports.default = {
         function partition(array, lo, hi) {
             var i = lo, j = hi + 1;
             while (i < j) {
-                while (array[++i].position.y < array[lo].position.y) {
+                while (array[++i].position.y + array[i].size.y < array[lo].position.y + array[lo].size.y) {
                     if (i == hi)
                         break;
                 }
-                while (array[--j].position.y > array[lo].position.y) {
+                while (array[--j].position.y + array[j].size.y > array[lo].position.y + array[lo].size.y) {
                     if (j == lo)
                         break;
                 }
@@ -142,3 +140,4 @@ exports.default = {
         return array;
     }
 };
+//# sourceMappingURL=Render.js.map

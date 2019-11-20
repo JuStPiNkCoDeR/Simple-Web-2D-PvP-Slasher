@@ -1,10 +1,17 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 var Vector = /** @class */ (function () {
     function Vector(x, y) {
         this._x = x;
         this._y = y;
     }
+    Vector.prototype.sum = function (vector) {
+        return new Vector(this._x + vector.x, this._y + vector.y);
+    };
+    Vector.prototype.subtract = function (vector) {
+        return new Vector(this._x - vector.x, this._y - vector.y);
+    };
+    Vector.prototype.divide = function (num) {
+        return new Vector(this._x / num, this._y / num);
+    };
     Vector.prototype.getX = function () {
         return this._x;
     };
@@ -37,6 +44,14 @@ var Vector = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Vector.prototype, "length", {
+        get: function () {
+            return Math.sqrt(Math.pow(this._x, 2) + Math.pow(this._y, 2));
+        },
+        enumerable: true,
+        configurable: true
+    });
     return Vector;
 }());
-exports.default = Vector;
+export default Vector;
+//# sourceMappingURL=Vector.js.map

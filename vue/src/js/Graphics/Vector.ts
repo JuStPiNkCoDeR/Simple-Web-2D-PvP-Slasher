@@ -7,6 +7,18 @@ export default class Vector {
         this._y = y;
     }
 
+    public sum(vector: Vector) {
+        return new Vector(this._x + vector.x, this._y + vector.y);
+    }
+
+    public subtract(vector: Vector) {
+        return new Vector(this._x - vector.x, this._y - vector.y);
+    }
+
+    public divide(num: number) {
+        return new Vector(this._x / num, this._y / num);
+    }
+
     public getX(): number {
         return this._x;
     }
@@ -37,5 +49,9 @@ export default class Vector {
 
     set y(value: number) {
         this._y = value;
+    }
+
+    get length(): number {
+        return Math.sqrt(Math.pow(this._x, 2) + Math.pow(this._y, 2));
     }
 }

@@ -43,6 +43,8 @@ export default class Animation {
 
         let index = Math.floor(this._time / this._durationPerFrame);
 
+        if (index > this._framesAmount - 1) index = 0;
+
         let sx = (this._direction === Directions.Horizontal) ? index * this._x : 0;
         let sy = (this._direction === Directions.Vectival) ? index * this._y : 0;
 

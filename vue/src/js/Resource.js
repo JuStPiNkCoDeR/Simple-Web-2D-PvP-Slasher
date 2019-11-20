@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 var Resource = /** @class */ (function () {
     function Resource(url, cache) {
         this._url = url;
@@ -21,4 +19,5 @@ var Resource = /** @class */ (function () {
     });
     return Resource;
 }());
-exports.default = Resource;
+export default Resource;
+//# sourceMappingURL=Resource.js.map

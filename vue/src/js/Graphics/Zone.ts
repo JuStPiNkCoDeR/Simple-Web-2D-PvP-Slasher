@@ -38,6 +38,13 @@ export default class Zone {
         return this._background;
     }
 
+    public onResize(diffConst: Vector): void {
+        this._position.x *= diffConst.x;
+        this._position.y *= diffConst.y;
+        this._size.x *= diffConst.x;
+        this._size.y *= diffConst.y;
+    }
+
     get position(): Vector {
         return this._position;
     }

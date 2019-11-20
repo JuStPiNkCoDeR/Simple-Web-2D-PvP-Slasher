@@ -27,5 +27,11 @@ export default {
         position: new Vector(0, size.y),
         size: new Vector(size.x, size.y),
         background: "img/backgrounds/dirt1.png"
+    }),
+    inn: new Zone({
+        name: "Inn",
+        position: new Vector(0, 0),
+        size: new Vector(size.x, size.y),
+        background: "img/backgrounds/floor1.png"
     })
 }

@@ -12,11 +12,12 @@
     import ViewPort from '../../js/Graphics/ViewPort';
     import Render from "../../js/Graphics/Render";
     import GameZones from "../../js/GameData/GameZones";
-    import SocketManager from "../../js/SocketManager";
+    import Levels from '../../js/GameData/Levels';
+    import GameObject from "../../js/Actor/GameObject";
 
-    let size = {x: document.documentElement.clientWidth, y: document.documentElement.clientHeight};
+    //import SocketManager from "../../js/SocketManager";
 
-    let initPosition = new Vector(size.x / 2, size.y / 2);
+    /*let initPosition = new Vector(1300 / 2, 700 / 2);
 
     let hero = new Character(initPosition, {
         accessToController: true
@@ -24,13 +25,15 @@
 
     let enemy = new Character(new Vector(size.x / 2 + size.x, size.y / 2 + size.y), {
         accessToController: false
-    });
+    });*/
 
     let id = 0;
 
+    let vp, canvas, ctx;
+
     export default {
         name: "GameField",
-        data: function() {
+        data() {
           return {
 
           }
@@ -38,16 +41,57 @@
         components: {
 
         },
+        mounted() {
+            let screenSize = new Vector(
+                this.$store.state.viewPortSize.x,
+                this.$store.state.viewPortSize.y
+            );
+
+            canvas = document.getElementById('game-field');
+            ctx = canvas.getContext("2d");
+            vp = new ViewPort(
+                ctx,
+                new Vector(0, 0),
+                screenSize
+            );
+            canvas.width = screenSize.x;
+            canvas.height = screenSize.y;
+        },
         methods: {
+            loadMenu() {
+                let levelData = Levels.menu;
+                vp.zones = levelData.zones;
+                let objects = Levels.getGameObjects(levelData);
+                vp.gameObjects = objects;
+
+                objects.solid.forEach((obj) => {
+                   objects.hero[0].collision.addTriggerWith(obj.collision);
+                });
+
+                let lastTriggered = Date.now();
+
+                function render() {
+                    let now = Date.now();
+                    let delta = now - lastTriggered;
+
+                    vp.update();
+                    vp.drawZones();
+                    vp.drawGameObjects(delta);
+
+                    lastTriggered = now;
+                    requestAnimationFrame(render);
+                }
+
+                render();
+            },
             init: function (data) {
-                hero.opponentID = data.opponentID;
+                /*hero.opponentID = data.opponentID;
                 if (data.isQuest) {
                     hero.position = new Vector(size.x / 2 + size.x, size.y / 2 + size.y);
                     enemy.position = initPosition;
                 }
 
                 SocketManager.$on('enemy:game:event', (data) => {
-                    console.log(data);
                     switch (data) {
                         case "up":
                             enemy.pressed.push('w');
@@ -62,26 +106,13 @@
                             enemy.pressed.push('d');
                             break;
                     }
-                });
-                let canvas = document.getElementById('game-field');
-                let ctx = canvas.getContext("2d");
-                let vp = new ViewPort(
-                    ctx,
-                    new Vector(0, 0),
-                    new Vector(size.x, size.y)
-                );
+                });*/
 
-                canvas.width = size.x;
-                canvas.height = size.y;
-
-                let zones = Object.values(GameZones);
-
+                /*vp.zones = Object.values(GameZones);
+                vp.gameObjects = [hero, enemy];
                 let lastTriggered = Date.now();
 
-                enemy.sprite.addAnimation(States.Idle, new Animation("img/Reaper_Man_2/IdleSpriteSheet.png", 18, 1300, 900, 900));
-                enemy.sprite.addAnimation(States.Walking, new Animation("img/Reaper_Man_2/IdleSpriteSheet.png", 18, 1300, 900, 900));
-                hero.sprite.addAnimation(States.Idle, new Animation("img/Reaper_Man_1/IdleSpriteSheet.png", 18, 1300, 900, 900));
-                hero.sprite.addAnimation(States.Walking, new Animation("img/Reaper_Man_1/WalkingSpriteSheet.png", 24, 800, 900, 900));
+
 
                 function render() {
                     let now = Date.now();
@@ -90,14 +121,28 @@
                     hero.update();
                     enemy.update();
                     vp.update(hero.position);
-                    vp.drawZones(zones);
+                    vp.drawZones();
                     vp.drawGameObjects(Render.sortByIncreasingY([hero, enemy]), delta);
 
                     lastTriggered = now;
                     requestAnimationFrame(render);
                 }
 
-                render();
+                render();*/
+            },
+            clientSizeChanged: function () {
+                let size = new Vector(
+                    this.$store.state.viewPortSize.x,
+                    this.$store.state.viewPortSize.y
+                );
+
+                try {
+                    canvas.width = size.x;
+                    canvas.height = size.y;
+                    vp.size = size;
+                } catch (e) {
+                    console.log(e);
+                }
             }
         }
     }

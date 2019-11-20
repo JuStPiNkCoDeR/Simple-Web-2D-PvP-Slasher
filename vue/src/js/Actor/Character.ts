@@ -1,7 +1,8 @@
 import Vector from '../Graphics/Vector';
 import States from './States';
 import GameObject from './GameObject';
-import SocketManager from '../SocketManager';
+import Box from "../Collisions/Box";
+//import SocketManager from '../SocketManager';
 
 function move(key) {
     switch (key) {
@@ -36,15 +37,21 @@ function init(props) {
 }
 
 export default class Character extends GameObject {
+    public opponentID = null;
     private movement;
     private readonly _accessToController: boolean;
-    public opponentID = null;
     private _pressed = [];
+    private _speedConst: number = 1;
 
     constructor(pos: Vector, props) {
         super({
+            name: props.name,
             size: new Vector(128, 128),
-            position: pos
+            position: pos,
+            collide: new Box({
+                offset: new Vector(0, 64),
+                size: new Vector(128, 64)
+            })
         });
         this.movement = move.bind(this);
 
@@ -53,45 +60,56 @@ export default class Character extends GameObject {
     }
 
     goUp() {
-        this._position.y -= 5;
-        this._sprite.state = States.Walking;
-        if (this.opponentID) SocketManager.$emit('hero:game:event', {
-            id: this.opponentID,
-            event: 'up'
-        });
+        let newPosition = new Vector(this._position.x, this._position.y - 5);
+        if (!this._collision.checkCollisions(newPosition)) {
+            this._position.y -= 5 * this._speedConst;
+            this._sprite.state = States.Walking;
+            /*if (this.opponentID) SocketManager.$emit('hero:game:event', {
+                id: this.opponentID,
+                event: 'up'
+            });*/
+        }
     }
 
     goDown() {
-        this._position.y += 5;
-        this._sprite.state = States.Walking;
+        let newPosition = new Vector(this._position.x, this._position.y + 5);
+        if (!this._collision.checkCollisions(newPosition)) {
+            this._position.y += 5 * this._speedConst;
+            this._sprite.state = States.Walking;
 
-        if (this.opponentID) {
-            SocketManager.$emit('hero:game:event', {
-                id: this.opponentID,
-                event: 'down'
-            });
+            /*if (this.opponentID) {
+                SocketManager.$emit('hero:game:event', {
+                    id: this.opponentID,
+                    event: 'down'
+                });
+            }*/
         }
-
     }
 
     goRight() {
-        this._position.x += 5;
-        this._sprite.state = States.Walking;
-        this._sprite.mirror(false);
-        if (this.opponentID) SocketManager.$emit('hero:game:event', {
-            id: this.opponentID,
-            event: 'right'
-        });
+        let newPosition = new Vector(this._position.x + 5, this._position.y);
+        if (!this._collision.checkCollisions(newPosition)) {
+            this._position.x += 5 * this._speedConst;
+            this._sprite.state = States.Walking;
+            this._sprite.mirror(false);
+            /* if (this.opponentID) SocketManager.$emit('hero:game:event', {
+                 id: this.opponentID,
+                 event: 'right'
+             });*/
+        }
     }
 
     goLeft() {
-        this._position.x -= 5;
-        this._sprite.state = States.Walking;
-        this._sprite.mirror(true);
-        if (this.opponentID) SocketManager.$emit('hero:game:event', {
-            id: this.opponentID,
-            event: 'left'
-        });
+        let newPosition = new Vector(this._position.x - 5, this._position.y);
+        if (!this._collision.checkCollisions(newPosition)) {
+            this._position.x -= 5 * this._speedConst;
+            this._sprite.state = States.Walking;
+            this._sprite.mirror(true);
+            /* if (this.opponentID) SocketManager.$emit('hero:game:event', {
+                 id: this.opponentID,
+                 event: 'left'
+             });*/
+        }
     }
 
     update() {
